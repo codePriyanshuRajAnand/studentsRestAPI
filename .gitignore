@@ -34,3 +34,8 @@ go.work.sum
 # database Files
 
 storage
+
+
+# Project config
+
+config
