@@ -9,7 +9,7 @@ import (
 )
 
 type HttpAddress struct {
-	Addr string
+	Addr string `yaml:"address" env-required:"true"`
 }
 
 type ProjectConfig struct {
@@ -33,7 +33,7 @@ func MustLoad() *ProjectConfig {
 		log.Fatalf("Config file does not exists %s", configPath)
 	}
 	var cfg ProjectConfig
-	err := cleanenv.ReadConfig(configPath, cfg)
+	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
 		log.Fatalf("Unable to read config file: %s", err.Error())
 	}
