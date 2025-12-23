@@ -45,7 +45,7 @@ func main() {
 
 	slog.Info("Starting Server", slog.String("Address", cfg.HttpAddress.Addr))
 
-	done := make(chan os.Signal)
+	done := make(chan os.Signal, 1)
 
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
