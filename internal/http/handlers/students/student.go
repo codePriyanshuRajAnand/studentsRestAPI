@@ -42,6 +42,6 @@ func Create(storage storage.Storage) http.HandlerFunc {
 		slog.Info("User Created successfully!", slog.String("StudentID", fmt.Sprint(id)))
 
 		// w.Write([]byte("Welcome to Students Rest API"))
-		response.WriteJson(w, http.StatusCreated, map[string]interface{}{"success": "OK", "IdCreated": id})
+		response.WriteJson(w, http.StatusCreated, map[string]interface{}{"status": "OK", "idCreated": id})
 	}
 }
