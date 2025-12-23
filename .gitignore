@@ -31,11 +31,6 @@ go.work.sum
 # .idea/
 # .vscode/
 
-# database Files
 
-storage
-
-
-# Project config
-
+/storage
 /config
