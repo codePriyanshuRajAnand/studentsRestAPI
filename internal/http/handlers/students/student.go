@@ -7,6 +7,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/codePriyanshuRajAnand/studentsRestAPI/internal/storage"
 	"github.com/codePriyanshuRajAnand/studentsRestAPI/internal/types"
@@ -43,5 +44,27 @@ func Create(storage storage.Storage) http.HandlerFunc {
 
 		// w.Write([]byte("Welcome to Students Rest API"))
 		response.WriteJson(w, http.StatusCreated, map[string]interface{}{"status": "OK", "idCreated": id})
+	}
+}
+
+func GetById(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+
+		slog.Info("Getting student with ", slog.String("id", id))
+
+		s_id, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.ErrorWriter(fmt.Errorf("Invalid argument %s", id)))
+			return
+		}
+
+		s, err := storage.GetStudentById(s_id)
+		if err != nil {
+			slog.Error("error getting student with", slog.String("id", id))
+			response.WriteJson(w, http.StatusInternalServerError, response.ErrorWriter(err))
+			return
+		}
+		response.WriteJson(w, http.StatusOK, s)
 	}
 }
