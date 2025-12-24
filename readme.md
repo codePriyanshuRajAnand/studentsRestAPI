@@ -21,3 +21,7 @@ A robust RESTful API built with **Go (Golang)** designed to manage student recor
 ## 📂 Project Structure
 
 This project follows the [Standard Go Project Layout](https://github.com/golang-standards/project-layout):
+
+<img width="3750" height="3767" alt="restApi" src="https://github.com/user-attachments/assets/aebe0d09-5e1d-4fcc-a6cc-0c3b8854bd98" />
+
+
