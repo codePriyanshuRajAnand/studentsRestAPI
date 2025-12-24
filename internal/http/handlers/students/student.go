@@ -99,3 +99,43 @@ func DeleteById(storage storage.Storage) http.HandlerFunc {
 		response.WriteJson(w, http.StatusNoContent, "Student record deleted successfully!")
 	}
 }
+
+func UpdateStudent(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		slog.Info("Updating student with ", slog.String("id", id))
+		s_id, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.ErrorWriter(fmt.Errorf("Invalid argument %s", id)))
+			return
+		}
+		var student types.Student
+		err = json.NewDecoder(r.Body).Decode(&student)
+		if errors.Is(err, io.EOF) {
+			response.WriteJson(w, http.StatusBadRequest, response.ErrorWriter(fmt.Errorf("request body is empty")))
+			return
+		}
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.ErrorWriter(err))
+			return
+		}
+		//request validation
+		if err := validator.New().Struct(student); err != nil {
+			validateErr := err.(validator.ValidationErrors)
+			response.WriteJson(w, http.StatusBadRequest, response.ValidationError(validateErr))
+			return
+		}
+
+		updated, err := storage.UpdateStudentById(s_id, student.Name, student.Email, student.Age)
+
+		if err != nil {
+			response.WriteJson(w, http.StatusInternalServerError, response.ErrorWriter(err))
+			return
+		}
+		slog.Info("Details updated successfully!", slog.String("StudentID", fmt.Sprint(id)))
+
+		// w.Write([]byte("Welcome to Students Rest API"))
+		response.WriteJson(w, http.StatusCreated, map[string]interface{}{"status": "OK", "rowsAffected": updated})
+	}
+
+}
